@@ -133,6 +133,11 @@ var primitiveTypes = map[string]bool{
 	"number":  true,
 	"string":  true,
 	"integer": true,
+
+	"bool":         true,
+	"datetime":     true,
+	"phone_number": true,
+	"json":         true,
 }
 
 // DataType attempts to parse the underlying data type
