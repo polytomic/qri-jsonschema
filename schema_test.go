@@ -546,6 +546,10 @@ func runJSONTests(t *testing.T, testFilepaths []string) {
 				sc := ts.Schema
 				for i, c := range ts.Tests {
 					tests++
+
+					// Ensure we can register keywords in go routines
+					RegisterKeyword(fmt.Sprintf("content-encoding-%d", tests), newContentEncoding)
+
 					validationState := sc.Validate(ctx, c.Data)
 					if validationState.IsValid() != c.Valid {
 						t.Errorf("%s: %s test case %d: %s. error: %s", base, ts.Description, i, c.Description, *validationState.Errs)
@@ -665,6 +669,18 @@ func TestValidateBytes(t *testing.T) {
 				`/0: 1 type should be string, got integer`,
 				`/1: false type should be string, got boolean`,
 				`/2: type should be string, got null`,
+			}},
+		{`{
+		"type": "object",
+		"properties" : {
+		},
+		"additionalProperties" : false
+	}`,
+			`{
+	"port": 80
+}`,
+			[]string{
+				`/port: {"port":80} additional properties are not allowed`,
 			}},
 	}
 
